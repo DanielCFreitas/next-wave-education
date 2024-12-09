@@ -1,4 +1,5 @@
 using DevFreela.API.Models;
+using DevFreela.API.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddOpenApi();
 builder.Services.Configure<FreelanceTotalCostConfig>(
     builder.Configuration.GetSection("FreelanceTotalCostConfig")
     );
+
+builder.Services.AddScoped<IConfigServices, ConfigServices>();
 
 var app = builder.Build();
 

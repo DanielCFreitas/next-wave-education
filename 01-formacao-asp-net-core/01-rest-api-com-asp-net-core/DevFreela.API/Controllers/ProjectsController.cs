@@ -1,4 +1,5 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -9,16 +10,18 @@ namespace DevFreela.API.Controllers;
 public class ProjectsController : ControllerBase
 {
     private readonly FreelanceTotalCostConfig _freelanceTotalCostConfig;
+    private readonly IConfigServices _configServices;
     
-    public ProjectsController(IOptions<FreelanceTotalCostConfig> options)
+    public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigServices configServices)
     {
+        _configServices = configServices;
         _freelanceTotalCostConfig = options.Value;
     }
     
     [HttpGet]
-    public IActionResult GetAll([FromQuery] string search)
+    public IActionResult GetAll([FromQuery] string search = "")
     {
-        return Ok();
+        return Ok(_configServices.GetValue());
     }
 
     [HttpGet("{id}")]
