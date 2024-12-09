@@ -1,3 +1,4 @@
+using DevFreela.API.Models;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.Configure<FreelanceTotalCostConfig>(
+    builder.Configuration.GetSection("FreelanceTotalCostConfig")
+    );
 
 var app = builder.Build();
 

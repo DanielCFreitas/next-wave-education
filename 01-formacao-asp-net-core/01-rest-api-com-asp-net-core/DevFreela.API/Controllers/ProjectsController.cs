@@ -1,5 +1,6 @@
 ﻿using DevFreela.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DevFreela.API.Controllers;
 
@@ -7,6 +8,13 @@ namespace DevFreela.API.Controllers;
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
+    private readonly FreelanceTotalCostConfig _freelanceTotalCostConfig;
+    
+    public ProjectsController(IOptions<FreelanceTotalCostConfig> options)
+    {
+        _freelanceTotalCostConfig = options.Value;
+    }
+    
     [HttpGet]
     public IActionResult GetAll([FromQuery] string search)
     {
@@ -22,6 +30,9 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] CreateProjectInputModel model)
     {
+        if(model.TotalCost < _freelanceTotalCostConfig.Minimum || 
+           model.TotalCost > _freelanceTotalCostConfig.Maximum)
+            return BadRequest("Numero fora do limite minimo e máximo");
         return CreatedAtAction(nameof(GetById), new { id = 1 }, model );
     }
 
