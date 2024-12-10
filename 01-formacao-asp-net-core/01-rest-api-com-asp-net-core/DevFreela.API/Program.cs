@@ -1,3 +1,4 @@
+using DevFreela.API.ExceptionHandler;
 using DevFreela.API.Models;
 using DevFreela.API.Services;
 using Scalar.AspNetCore;
@@ -16,6 +17,9 @@ builder.Services.Configure<FreelanceTotalCostConfig>(
 
 builder.Services.AddScoped<IConfigServices, ConfigServices>();
 
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
