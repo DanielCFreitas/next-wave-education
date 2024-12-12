@@ -1,4 +1,5 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using DevFreela.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,12 +10,14 @@ namespace DevFreela.API.Controllers;
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
+    private readonly DevFreelaDbContext _context;
     private readonly FreelanceTotalCostConfig _freelanceTotalCostConfig;
     private readonly IConfigServices _configServices;
     
-    public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigServices configServices)
+    public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigServices configServices, DevFreelaDbContext context)
     {
         _configServices = configServices;
+        _context = context;
         _freelanceTotalCostConfig = options.Value;
     }
     
