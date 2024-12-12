@@ -27,8 +27,6 @@ public class ProjectsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        throw new Exception();
-        
         return Ok();
     }
 
