@@ -2,7 +2,7 @@
 
 public class User : BaseEntity
 {
-    public User(string fullName, string email, DateTime birthDate, bool active) 
+    public User(string fullName, string email, DateTime birthDate, bool active = true) 
         : base()
     {
         FullName = fullName;
