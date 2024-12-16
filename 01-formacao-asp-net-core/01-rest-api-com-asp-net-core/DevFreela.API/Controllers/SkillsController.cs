@@ -2,6 +2,7 @@
 using DevFreela.API.Models;
 using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API.Controllers;
 
@@ -19,7 +20,9 @@ public class SkillsController : ControllerBase
     [HttpGet]
     public IActionResult GetAll()
     {
-        var skills = _context.Skills.ToList();
+        var skills = _context.Skills
+            .Include(skill => skill.UserSkills)
+            .ToList();
 
         var skillsViewModel = skills.Select(SkillViewModel.FromEntity);
         

@@ -60,7 +60,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put([FromQuery] int id, [FromBody] UpdateProjectInputModel model)
+    public IActionResult Put([FromRoute] int id, [FromBody] UpdateProjectInputModel model)
     {
         var project = _context.Projects.SingleOrDefault(project => project.Id == id);
 
