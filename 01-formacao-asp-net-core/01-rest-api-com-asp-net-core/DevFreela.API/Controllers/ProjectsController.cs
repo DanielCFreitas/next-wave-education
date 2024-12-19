@@ -3,6 +3,7 @@ using DevFreela.API.Models;
 using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DevFreela.API.Controllers;
 
@@ -24,7 +25,7 @@ public class ProjectsController : ControllerBase
             _context.Projects
                 .Include(project => project.Client)
                 .Include(project => project.Freelancer)
-                .Where(project => !project.IsDeleted)
+                .Where(project => !project.IsDeleted && (search.IsNullOrEmpty() || project.Title.Contains(search) || project.Description.Contains(search)))
                 .ToList();
 
         var model = projects
