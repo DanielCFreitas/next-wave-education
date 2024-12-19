@@ -19,13 +19,15 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get([FromQuery] string search = "")
+    public IActionResult Get([FromQuery] string search = "", [FromQuery] int page = 0, [FromQuery] int size = 3)
     {
         var projects =
             _context.Projects
                 .Include(project => project.Client)
                 .Include(project => project.Freelancer)
                 .Where(project => !project.IsDeleted && (search.IsNullOrEmpty() || project.Title.Contains(search) || project.Description.Contains(search)))
+                .Skip(page * size)
+                .Take(size)
                 .ToList();
 
         var model = projects
