@@ -17,4 +17,10 @@
         <PackageReference Include="Scalar.AspNetCore" Version="1.2.49" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DevFreela.Application\DevFreela.Application.csproj" />
+      <ProjectReference Include="..\DevFreela.Core\DevFreela.Core.csproj" />
+      <ProjectReference Include="..\DevFreela.Infrastructure\DevFreela.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
