@@ -11,6 +11,8 @@ public class UpdateProjectHandler(DevFreelaDbContext dbContext) : IRequestHandle
     {
         var project = await dbContext.Projects.SingleOrDefaultAsync(project => project.Id == request.IdProject);
 
+        if (project is null) return ResultViewModel.Error("Projeto não encontrado");
+
         project.Update(request.Title, request.Description, request.TotalCost);
 
         dbContext.Projects.Update(project);
