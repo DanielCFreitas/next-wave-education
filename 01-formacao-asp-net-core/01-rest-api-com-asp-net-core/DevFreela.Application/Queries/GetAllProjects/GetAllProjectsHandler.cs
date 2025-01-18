@@ -2,6 +2,7 @@
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DevFreela.Application.Queries.GetAllProjects;
 
@@ -13,7 +14,7 @@ public class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, Result
     }
 
     private readonly DevFreelaDbContext _dbContext;
-    
+
     public async Task<ResultViewModel<List<ProjectItemViewModel>>> Handle(GetAllProjectsQuery request,
         CancellationToken cancellationToken)
     {
@@ -21,6 +22,12 @@ public class GetAllProjectsHandler : IRequestHandler<GetAllProjectsQuery, Result
             await _dbContext.Projects
                 .Include(project => project.Client)
                 .Include(project => project.Freelancer)
+                .Where(project =>
+                    !project.IsDeleted && (project.Title.Contains(request.Search) ||
+                                           project.Description.Contains(request.Search) ||
+                                           request.Search.IsNullOrEmpty()))
+                .Skip(request.Page * request.Size)
+                .Take(request.Size)
                 .ToListAsync();
 
         var model = projects

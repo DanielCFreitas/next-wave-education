@@ -27,7 +27,7 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] string search = "", [FromQuery] int page = 0,
         [FromQuery] int size = 3)
     {
-        var query = new GetAllProjectsQuery();
+        var query = new GetAllProjectsQuery(search, page, size);
         var result = await _mediator.Send(query);
 
         return Ok(result);

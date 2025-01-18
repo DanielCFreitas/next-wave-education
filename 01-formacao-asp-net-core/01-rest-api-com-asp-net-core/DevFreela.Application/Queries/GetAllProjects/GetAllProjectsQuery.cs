@@ -3,6 +3,10 @@ using MediatR;
 
 namespace DevFreela.Application.Queries.GetAllProjects;
 
-public class GetAllProjectsQuery : IRequest<ResultViewModel<List<ProjectItemViewModel>>>
+public class GetAllProjectsQuery(string search, int page, int size)
+    : IRequest<ResultViewModel<List<ProjectItemViewModel>>>
 {
+    public string Search { get; set; } = search;
+    public int Page { get; set; } = page;
+    public int Size { get; set; } = size;
 }
