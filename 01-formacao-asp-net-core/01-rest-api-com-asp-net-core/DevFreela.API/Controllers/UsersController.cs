@@ -1,8 +1,9 @@
-﻿using DevFreela.Application.Models;
-using DevFreela.Core.Entities;
-using DevFreela.Infrastructure.Persistence;
+﻿using DevFreela.Application.Commands.InsertSkillsToUser;
+using DevFreela.Application.Commands.InsertUser;
+using DevFreela.Application.Commands.SetUserProfilePicture;
+using DevFreela.Application.Queries.GetUserById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API.Controllers;
 
@@ -10,56 +11,52 @@ namespace DevFreela.API.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly DevFreelaDbContext _context;
+    private readonly IMediator _mediator;
 
-    public UsersController(DevFreelaDbContext context)
+    public UsersController(IMediator mediator)
     {
-        _context = context;
+        _mediator = mediator;
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var user = _context.Users
-            .Include(user => user.Skills)
-            .ThenInclude(skill => skill.Skill)
-            .SingleOrDefault(u => u.Id == id);
+        var query = new GetUserByIdQuery(id);
+        var result = await _mediator.Send(query);
 
-        if (user is null) return NotFound();
+        if (!result.IsSuccess) return NotFound(result.Message);
 
-        var model = UserViewModel.FromEntity(user);
-
-        return Ok(model);
+        return Ok(result.Data);
     }
 
     [HttpPost]
-    public IActionResult Post(CreateUserInputModel model)
+    public async Task<IActionResult> Post([FromBody] InsertUserCommand command)
     {
-        var user = new User(model.FullName, model.Email, model.BirthDate);
+            var result = await _mediator.Send(command);
 
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        if (!result.IsSuccess) return BadRequest();
 
         return Ok();
     }
 
     [HttpPost("{id}/skills")]
-    public IActionResult PostSkills([FromRoute] int id, UserSkillsInputModel model)
+    public async Task<IActionResult> PostSkills([FromRoute] int id, InsertSkillsToUserCommand command)
     {
-        var userSkills = model.SkillsId
-            .Select(skillId => new UserSkill(id, skillId));
-        
-        _context.UsersSkills.AddRange(userSkills);
-        _context.SaveChanges();
-        
+        var result = await _mediator.Send(command);
+
+        if (!result.IsSuccess) return BadRequest();
+
         return Ok();
     }
 
     [HttpPut("{id}/profile-picture")]
-    public IActionResult PutProfilePicture(IFormFile file)
+    public async Task<IActionResult> PutProfilePicture(IFormFile file)
     {
-        var description = $"File: {file.FileName}, Size: {file.Length}";
+        var command = new SetUserProfilePictureCommand(file.FileName, file.Length);
+        var result = await _mediator.Send(command);
 
-        return Ok(description);
+        if (!result.IsSuccess) return BadRequest();
+
+        return Ok(command.FileName);
     }
 }
