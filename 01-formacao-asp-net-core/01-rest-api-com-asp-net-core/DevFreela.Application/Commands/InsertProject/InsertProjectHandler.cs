@@ -1,6 +1,6 @@
 ﻿using DevFreela.Application.Models;
 using DevFreela.Application.Notification.ProjectCreated;
-using DevFreela.Infrastructure.Persistence;
+using DevFreela.Core.Repositories;
 using MediatR;
 
 namespace DevFreela.Application.Commands.InsertProject;
@@ -8,13 +8,12 @@ namespace DevFreela.Application.Commands.InsertProject;
 public class InsertProjectHandler
     : IRequestHandler<InsertProjectCommand, ResultViewModel<int>>
 {
-    
-    private readonly DevFreelaDbContext _dbContext;
+    private readonly IProjectRepository _projectRepository;
     private readonly IMediator _mediator;
     
-    public InsertProjectHandler(DevFreelaDbContext dbContext, IMediator mediator)
+    public InsertProjectHandler(IProjectRepository projectRepository, IMediator mediator)
     {
-        _dbContext = dbContext;
+        _projectRepository = projectRepository;
         _mediator = mediator;
     }
     
@@ -22,8 +21,7 @@ public class InsertProjectHandler
     {
         var project = request.ToEntity();
 
-        _dbContext.Projects.Add(project);
-        await _dbContext.SaveChangesAsync();
+        await _projectRepository.Add(project);
 
         var projectCreated = new ProjectCreatedNotification(project.Id, project.Title, project.TotalCost);
         await _mediator.Publish(projectCreated);
