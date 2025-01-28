@@ -1,27 +1,26 @@
 ﻿using DevFreela.Application.Models;
-using DevFreela.Infrastructure.Persistence;
+using DevFreela.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.Application.Commands.InsertProject;
 
 public class ValidadeInsertProjectCommandBehavior :
     IPipelineBehavior<InsertProjectCommand, ResultViewModel<int>>
 {
-    private readonly DevFreelaDbContext _dbContext;
+    private readonly IUserRepository _userRepository;
 
-    public ValidadeInsertProjectCommandBehavior(DevFreelaDbContext dbContext)
+    public ValidadeInsertProjectCommandBehavior(IUserRepository userRepository)
     {
-        _dbContext = dbContext;
+        _userRepository = userRepository;
     }
 
     public async Task<ResultViewModel<int>> Handle(InsertProjectCommand request,
         RequestHandlerDelegate<ResultViewModel<int>> next, CancellationToken cancellationToken)
     {
-        var clientExists = await _dbContext.Users.AnyAsync(user => user.Id == request.IdClient);
-        var freelancerExists = await _dbContext.Users.AnyAsync(user => user.Id == request.IdFreelancer);
+        var clientExists = await _userRepository.Exists(request.IdClient);
+        var freelancerExists = await _userRepository.Exists(request.IdFreelancer);
 
-        if (!clientExists || !freelancerExists) 
+        if (!clientExists || !freelancerExists)
             return ResultViewModel<int>.Error("Cliente ou Freelancer inválidos");
 
         return await next();

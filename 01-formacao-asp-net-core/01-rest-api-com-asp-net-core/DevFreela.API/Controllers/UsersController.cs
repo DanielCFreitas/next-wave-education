@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] InsertUserCommand command)
     {
-            var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
 
         if (!result.IsSuccess) return BadRequest();
 
@@ -44,7 +44,7 @@ public class UsersController : ControllerBase
     {
         var result = await _mediator.Send(command);
 
-        if (!result.IsSuccess) return BadRequest();
+        if (!result.IsSuccess) return BadRequest(result.Message);
 
         return Ok();
     }

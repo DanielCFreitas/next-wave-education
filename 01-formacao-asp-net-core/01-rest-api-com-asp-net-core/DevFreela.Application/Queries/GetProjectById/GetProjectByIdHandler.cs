@@ -1,9 +1,10 @@
 ﻿using DevFreela.Application.Models;
 using DevFreela.Core.Repositories;
+using MediatR;
 
 namespace DevFreela.Application.Queries.GetProjectById;
 
-public class GetProjectByIdHandler
+public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, ResultViewModel<ProjectItemViewModel>>
 {
     private readonly IProjectRepository _projectRepository;
 

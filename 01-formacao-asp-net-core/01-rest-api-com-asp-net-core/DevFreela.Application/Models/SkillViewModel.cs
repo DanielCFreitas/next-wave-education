@@ -16,7 +16,8 @@ public class SkillViewModel
     public static SkillViewModel FromEntity(Skill skill)
     {
         var usersWithSkill = skill.UserSkills
-            .Select(user => user.User.FullName);
+            .Select(user => user.User.FullName)
+            .ToList();
         
         return new(skill.Description, usersWithSkill);
     }
