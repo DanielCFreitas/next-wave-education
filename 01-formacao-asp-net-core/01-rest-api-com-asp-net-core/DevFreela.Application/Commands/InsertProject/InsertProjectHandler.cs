@@ -21,11 +21,11 @@ public class InsertProjectHandler
     {
         var project = request.ToEntity();
 
-        await _projectRepository.Add(project);
+        var projectId = await _projectRepository.Add(project);
 
         var projectCreated = new ProjectCreatedNotification(project.Id, project.Title, project.TotalCost);
         await _mediator.Publish(projectCreated);
 
-        return ResultViewModel<int>.Success(project.Id);
+        return ResultViewModel<int>.Success(projectId);
     }
 }
