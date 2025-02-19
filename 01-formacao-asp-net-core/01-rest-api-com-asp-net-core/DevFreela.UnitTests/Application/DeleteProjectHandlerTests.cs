@@ -1,6 +1,7 @@
 ﻿using DevFreela.Application.Commands.DeleteProject;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
+using DevFreela.UnitTests.Fakes;
 using FluentAssertions;
 using Moq;
 using NSubstitute;
@@ -13,8 +14,8 @@ public class DeleteProjectHandlerTests
     public async Task ProjectExists_Delete_Success_NSubstitute()
     {
         // Arrange
-        var project = new Project("Project A", "Descricao do projeto", 20000, 1, 2);
-
+        var project = FakeDataHelper.CreateFakeProject();
+            
         var repository = Substitute.For<IProjectRepository>();
         repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
         repository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
@@ -35,7 +36,7 @@ public class DeleteProjectHandlerTests
     public async Task ProjectExists_Delete_Success_Moq()
     {
         // Arrange
-        var project = new Project("Project A", "Descricao do projeto", 20000, 1, 2);
+        var project = FakeDataHelper.CreateFakeProject();
         
         // ==================== Primeira forma de instanciar usando o MOQ ========================
         var mockRepository = new Mock<IProjectRepository>();
