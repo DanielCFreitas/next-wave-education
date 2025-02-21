@@ -3,9 +3,12 @@ using MediatR;
 
 namespace DevFreela.Application.Commands.InsertUser;
 
-public class InsertUserCommand(string fullName, string email, DateTime birthDate) : IRequest<ResultViewModel>
+public class InsertUserCommand(string fullName, DateTime birthDate, string email, string password, string role)
+    : IRequest<ResultViewModel>
 {
     public string FullName { get; set; } = fullName;
-    public string Email { get; set; } = email;
     public DateTime BirthDate { get; set; } = birthDate;
+    public string Email { get; set; } = email;
+    public string Password { get; set; } = password;
+    public string Role { get; set; } = role;
 }
