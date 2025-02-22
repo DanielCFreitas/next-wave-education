@@ -8,4 +8,5 @@ public interface IUserRepository
     Task Add(User user);
     Task AddSkills(IEnumerable<UserSkill> userSkills);
     Task<bool> Exists(int id);
+    Task<User?> Authenticate(string email, string password);
 }

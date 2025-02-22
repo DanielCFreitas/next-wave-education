@@ -37,4 +37,10 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.AnyAsync(user => user.Id == id);
     }
+
+    public async Task<User?> Authenticate(string email, string password)
+    {
+        return await _dbContext.Users
+            .SingleOrDefaultAsync(user => user.Email == email && user.Password == password);
+    }
 }
