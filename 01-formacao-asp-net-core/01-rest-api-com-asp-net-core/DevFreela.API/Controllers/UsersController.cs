@@ -94,6 +94,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("password-recovery/request")]
+    [AllowAnonymous]
     public async Task<IActionResult> RequestPasswordRecovery(PasswordRecoveryInputModel model)
     {
         var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
@@ -110,6 +111,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("password-recovery/validate")]
+    [AllowAnonymous]
     public IActionResult ValidateRecoveryCode(ValidateRecoveryCodeInputModel model)
     {
         var cacheKey = $"RecoveryCode:{model.Email}";
@@ -121,6 +123,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("password-recovery/change")]
+    [AllowAnonymous]
     public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model)
     {
         var cacheKey = $"RecoveryCode:{model.Email}";
