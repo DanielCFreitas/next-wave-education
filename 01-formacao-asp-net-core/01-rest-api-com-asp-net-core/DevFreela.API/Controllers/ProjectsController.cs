@@ -24,7 +24,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "freelancer, client")]
     public async Task<IActionResult> Get([FromQuery] string search = "", [FromQuery] int page = 0,
         [FromQuery] int size = 3)
     {
@@ -45,6 +45,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "client")]
     public async Task<IActionResult> Post([FromBody] InsertProjectCommand command)
     {
         var result = await _mediator.Send(command);
